@@ -20,7 +20,7 @@ module Entropic
   #  sliding('01234', 2)  
   #  # => ['01', '12', '23', '34']
   #
-  def sliding(string, n)
+  def Entropic.sliding(string, n)
     (0..string.length - n).map { |i| (string[i, n]).to_s }
   end
 
@@ -44,7 +44,7 @@ module Entropic
     # multiplier: The Integer describing how much weight (will often be 1)
     #
     def update_with_multiplier(string, multiplier)
-      sliding(string, @size).each do |ngram|
+      Entropic.sliding(string, @size).each do |ngram|
         @counts[ngram] += multiplier
         @total += multiplier
       end
@@ -174,7 +174,7 @@ module Entropic
     #  - log_prob_average
     #  - size (number of ngrams in string)
     def predict(string)
-      ngrams = sliding(string, @size)
+      ngrams = Entropic.sliding(string, @size)
       log_prob_total = ngrams.map { |ngram| log_prob(ngram) }.inject(0.0, :+)
       log_prob_average = log_prob_total / ngrams.size.to_f
       { log_prob_total: log_prob_total, log_prob_average: log_prob_average, size: ngrams.size }
