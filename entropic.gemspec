@@ -9,9 +9,9 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Will Fitzgerald"]
   spec.email         = ["willf@github.com"]
 
-  spec.summary       = %q{TODO: Write a short summary, because Rubygems requires one.}
-  spec.description   = %q{TODO: Write a longer description or delete this line.}
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.description = %q{Train and predict string entropy based on character n-grams.}
+  spec.summary     = spec.description
+  spec.homepage      = "https://github.com/willf/entropic"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
   # to allow pushing to a single host or delete this section to allow pushing to any host.
