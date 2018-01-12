@@ -1,8 +1,47 @@
 # Entropic
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/entropic`. To experiment with that code, run `bin/console` for an interactive prompt.
+Entropic trains and predicts entropy of strings based on character n-gram models. For example:
 
-TODO: Delete this and the text above, and describe your gem
+```ruby
+require 'entropic'
+>> m = Entropic::Model.read(open('https://raw.githubusercontent.com/willf/entropy/master/data/google_books_2.tsv')); true
+=> true
+>> m.predict("entropy")
+=> {:log_prob_total=>-37.181802347513745, :log_prob_average=>-6.1969670579189575, :size=>6}
+>> m.predict("yportne")
+=> {:log_prob_total=>-34.25705444264748, :log_prob_average=>-5.70950907377458, :size=>6}
+```
+
+The string 'yportne' is much less likely than the string 'entropy'.
+
+You can also train a model, using strings one per line.
+
+```ruby
+>> n = Entropic::Model.new(2); true
+=> true
+>> File.open('/tmp/training.txt') {|f| n.train(f)}; true
+=> true
+>> n.predict('love')
+=> {:log_prob_total=>-15.396216763909154, :log_prob_average=>-5.132072254636385, :size=>3}
+```
+
+You can also train a model, using strings and a count of the number of times it appers, tab separated.
+
+```ruby
+>> o = Entropic::Model.new(2); true
+=> true
+>> File.open('/tmp/training_with_counts.txt') {|f| o.train_with_multiplier(f)}; true
+=> true
+>> o.predict('love')
+=> {:log_prob_total=>-15.396216763909154, :log_prob_average=>-5.132072254636385, :size=>3}
+```
+
+You can also dump a model, to be read later.
+
+```ruby
+>> File.open('/tmp/save.tsv','w') {|f| o.dump(f)}; true
+=> true
+```
 
 ## Installation
 
@@ -20,9 +59,6 @@ Or install it yourself as:
 
     $ gem install entropic
 
-## Usage
-
-TODO: Write usage instructions here
 
 ## Development
 
