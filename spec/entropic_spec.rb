@@ -50,7 +50,7 @@ RSpec.describe Model do
     end
 
     it 'should create a model dictionary of size maxsize' do
-      se.map.keys.size.should eq(2)
+      se.counter.size.should eq(2)
     end
   end
 
@@ -68,11 +68,13 @@ RSpec.describe Model do
 
     it 'should produce a result when trained and ngram is not present' do
       se = Model.new(2)
-      se.train(StringIO.new('testtest'))
-      se.log_prob('ZZ').should be < se.log_prob('te')
+      se.train(StringIO.new('testtest')) # te occurs 2 times; tt occurs 1
+      se.log_prob('ZZ').should be < se.log_prob('te') # ZZ occurs 0 times, count as 0.5
       se.log_prob('ZZ').should < se.log_prob('tt')
     end
+  end
 
+  describe '#dump' do
     it 'should be able to read dumped data' do
       data = <<HERE
 2	fa	13798.000000
@@ -89,7 +91,9 @@ HERE
       se0.log_prob('fa').should be < 0.0
       se0.log_prob('fa').should be > Math.log(0, 2.0)
     end
+  end
 
+  describe '#predict' do
     it 'should be able to predict' do
       se0 = Model.new(2)
       data = <<HERE
@@ -115,20 +119,45 @@ HERE
     end
   end
 
-  it 'should be able to dump and read' do
-    se0 = Model.new(2)
-    se0.train(StringIO.new("test\nbest\n"))
-    o = StringIO.new('', 'w')
-    se0.dump(o)
-    o.close
-    se2 = Model.read(StringIO.new(o.string))
-    key = 'faPGzw'
-    ngrams = Entropic.sliding(key, 2)
-    d = se2.predict(key)
-    d.fetch(:size, 0).should eq(ngrams.size)
-    d.fetch(:log_prob_total, 0).should be < 0.0
-    d.fetch(:log_prob_total, 0).should_not be -Float::INFINITY
-    d.fetch(:log_prob_average, 0).should be < 0.0
-    d.fetch(:log_prob_average, 0).should_not be -Float::INFINITY
+  describe '#entropy' do
+    it 'should be able to calculate entropy' do
+      se0 = Model.new(2)
+      data = <<HERE
+2	fa	13798.000000
+2	PG	13.000000
+2	Os	35.000000
+2	zw	893.000000
+2	6D	7.000000
+2	Hg	1.000000
+2	RU	15.000000
+2	Zg	3.000000
+2	tp	2237.000000
+HERE
+      se0 = Model.read(StringIO.new(data))
+      se0.size.should eq(2)
+      key = 'faPGzw'
+      e = se0.entropy(key)
+      e.should be > 0.0
+      e.should_not be Float::INFINITY
+    end
+  end
+
+  describe '#read' do
+    it 'should be able to dump and read' do
+      se0 = Model.new(2)
+      se0.train(StringIO.new("test\nbest\n"))
+      o = StringIO.new('', 'w')
+      se0.dump(o)
+      o.close
+      se2 = Model.read(StringIO.new(o.string))
+      key = 'faPGzw'
+      ngrams = Entropic.sliding(key, 2)
+      d = se2.predict(key)
+      d.fetch(:size, 0).should eq(ngrams.size)
+      d.fetch(:log_prob_total, 0).should be < 0.0
+      d.fetch(:log_prob_total, 0).should_not be -Float::INFINITY
+      d.fetch(:log_prob_average, 0).should be < 0.0
+      d.fetch(:log_prob_average, 0).should_not be -Float::INFINITY
+    end
   end
 end
