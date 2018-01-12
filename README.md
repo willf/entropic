@@ -8,7 +8,7 @@ require 'entropic'
 => true
 >> m.predict("entropy")
 => {:log_prob_total=>-37.181802347513745, :log_prob_average=>-6.1969670579189575, :size=>6}
->> m.predict("yportne")
+>> m.entropy("yportne")
 => {:log_prob_total=>-34.25705444264748, :log_prob_average=>-5.70950907377458, :size=>6}
 ```
 
@@ -21,8 +21,8 @@ You can also train a model, using strings one per line.
 => true
 >> File.open('/tmp/training.txt') {|f| n.train(f)}; true
 => true
->> n.predict('love')
-=> {:log_prob_total=>-15.396216763909154, :log_prob_average=>-5.132072254636385, :size=>3}
+>> n.entropy('love')
+=> 5.132072254636385
 ```
 
 You can also train a model, using strings and a count of the number of times it appers, tab separated.
@@ -32,8 +32,8 @@ You can also train a model, using strings and a count of the number of times it 
 => true
 >> File.open('/tmp/training_with_counts.txt') {|f| o.train_with_multiplier(f)}; true
 => true
->> o.predict('love')
-=> {:log_prob_total=>-15.396216763909154, :log_prob_average=>-5.132072254636385, :size=>3}
+>> o.entropy('love')
+=> 5.132072254636385
 ```
 
 You can also dump a model, to be read later.
