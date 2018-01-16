@@ -6,10 +6,10 @@ Entropic trains and predicts entropy of strings based on character n-gram models
 require 'entropic'
 >> m = Entropic::Model.read(open('https://raw.githubusercontent.com/willf/entropy/master/data/google_books_2.tsv')); true
 => true
->> m.predict("entropy")
-=> {:log_prob_total=>-37.181802347513745, :log_prob_average=>-6.1969670579189575, :size=>6}
+>> m.entropy("entropy")
+=> 10.15243685946792
 >> m.entropy("yportne")
-=> {:log_prob_total=>-34.25705444264748, :log_prob_average=>-5.70950907377458, :size=>6}
+=> 11.048928592721346
 ```
 
 The string 'yportne' is much less likely than the string 'entropy'.
